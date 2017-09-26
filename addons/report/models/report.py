@@ -160,7 +160,6 @@ class Report(models.Model):
         # because the resources files are not loaded in time.
         # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
         context['debug'] = False
-        _logger.error('here')
         if html is None:
             html = self.with_context(context).get_html(docids, report_name, data=data)
 
@@ -200,17 +199,13 @@ class Report(models.Model):
         try:
             root = lxml.html.fromstring(html)
             match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
-            _logger.error(['match_klass', match_klass])
 
             for node in root.xpath(match_klass.format('header')):
-                _logger.error('header')
                 body = lxml.html.tostring(node)
                 header = render_minimal(dict(subst=True, body=body, base_url=base_url))
-                _logger.error(base_url)
                 headerhtml.append(header)
 
             for node in root.xpath(match_klass.format('footer')):
-                _logger.error('footer')
                 body = lxml.html.tostring(node)
                 footer = render_minimal(dict(subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
@@ -236,7 +231,6 @@ class Report(models.Model):
                 reportcontent = render_minimal(dict(subst=False, body=body, base_url=base_url))
 
                 contenthtml.append(tuple([reportid, reportcontent]))
-                _logger.error(['report', reportid])
 
         except lxml.etree.XMLSyntaxError, e:
             _logger.error('lxml.etree.XMLSyntaxError')

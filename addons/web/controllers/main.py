@@ -821,8 +821,6 @@ class DataSet(http.Controller):
         :rtype: list
         """
         Model = request.env[model]
-        _logger.error('888888888')
-        _logger.error(domain, fields)
         records = Model.search_read(domain, fields,
                                     offset=offset or 0, limit=limit or False, order=sort or False)
         if not records:
