@@ -24,6 +24,11 @@ class report_print_check(report_sxw.rml_parse):
         stub_pages = self.make_stub_pages(payment)
         multi_stub = payment.company_id.us_check_multi_stub
         pages = []
+
+        # CUSTOM CODE: fix empty amount_in_words
+        payment.check_amount_in_words = payment.getCheckAmountInWordsLabel(payment)
+        # CUSTOM CODE END
+
         for i in range(0, stub_pages != None and len(stub_pages) or 1):
             pages.append({
                 'sequence_number': payment.check_number\
