@@ -718,6 +718,11 @@ class Message(models.Model):
 
         message = super(Message, self).create(values)
 
+        # CUSTOM CODE
+        if 'channel_ids' in values:
+            message.force_channel_ids = values['channel_ids']
+        # CUSTOM CODE END
+
         message._notify(force_send=self.env.context.get('mail_notify_force_send', True),
                         user_signature=self.env.context.get('mail_notify_user_signature', True))
         return message
