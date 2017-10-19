@@ -719,7 +719,7 @@ class Message(models.Model):
         message = super(Message, self).create(values)
 
         # CUSTOM CODE
-        if 'channel_ids' in values:
+        if 'channel_ids' in values and values['model'] == 'mail.channel':
             message.force_channel_ids = values['channel_ids']
         # CUSTOM CODE END
 
