@@ -601,8 +601,8 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd">
-                        <field string="Sales" name="sales_count" widget="statinfo" />
+                        type="object" icon="fa-usd" string="Sales">
+                        <!--<field string="Sales" name="sales_count" widget="statinfo" />-->
                     </button>
                 </div>
                 <group name="description" position="after">
