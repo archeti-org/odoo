@@ -195,7 +195,7 @@ class YodleeProviderAccount(models.Model):
         # If we have an id, it means that provider_account already exists and that it is an update
         if len(self) > 0 and self.id:
             params = {'providerAccountIds': self.provider_account_identifier}
-            resp_json = self.yodlee_fetch('/providers/providerAccounts', params, data, 'PUT')
+            resp_json = self.yodlee_fetch('/providers/providerAccounts', params, data, 'GET')
             return self.id
         else:
             resp_json = self.yodlee_fetch('/providers/providerAccounts', params, data, 'POST')
@@ -473,7 +473,7 @@ class YodleeAccount(models.Model):
         transactions = []
         for tr in resp_json.get('transaction', []):
             # We only take posted transaction into account
-            if tr.get('status') == 'POSTED':
+            if tr.get('status') == 'POSTED' or tr.get('status') == 'PENDING':
                 date = tr.get('date') or tr.get('postDate') or tr.get('transactionDate')
                 dt = datetime.datetime
                 date = dt.strftime(dt.strptime(date, '%Y-%m-%d'), DEFAULT_SERVER_DATE_FORMAT)
@@ -487,5 +487,6 @@ class YodleeAccount(models.Model):
                     'description': tr.get('description',{}).get('original', 'No description'),
                     'amount': amount * -1 if tr.get('baseType') == 'DEBIT' else amount,
                     'end_amount': self.balance,
+                    'status' : tr.get('status')
                     })
         return self.env['account.bank.statement'].online_sync_bank_statement(transactions, self.journal_ids[0])

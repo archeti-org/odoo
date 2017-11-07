@@ -5,6 +5,9 @@ from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
+import logging
+_logger = logging.getLogger(__name__)
+
 """
 This module manage an "online account" for a journal. It can't be used in standalone,
 other module have to be install (like Plaid or Yodlee). Theses modules must be given
@@ -228,6 +231,7 @@ class AccountBankStatement(models.Model):
         total = 0
         lines = []
         last_date = journal.account_online_journal_id.last_sync
+        min_last_date = last_date
         end_amount = 0
         for transaction in transactions:
             if all_lines.search_count([('online_identifier', '=', transaction['id'])]) > 0:
@@ -236,11 +240,17 @@ class AccountBankStatement(models.Model):
                 
             # CUSTOM CODE: remove dupliated transactions
             if self.env['account.bank.statement.line'].search_count([('online_identifier', '=', transaction['id'])]) > 0:
-                _logger.error('--------POSSIBLE DULIACED TRANSACYION --------');
-                _logger.error(transaction['id']);
+                _logger.error(['--------POSSIBLE DULIACED TRANSACYION --------'])
+                _logger.error([transaction['id']])
                 continue
             # CUSTOM CODE ends;
-            
+
+            # Get the last date
+            if 'status' in transaction and transaction['status'] == 'PENDING':
+                if transaction['date'] < min_last_date:
+                    min_last_date = transaction['date']
+                continue
+
             line = {
                 'date': transaction['date'],
                 'name': transaction['description'],
@@ -255,6 +265,10 @@ class AccountBankStatement(models.Model):
             # Get the last date
             if not last_date or transaction['date'] > last_date:
                 last_date = transaction['date']
+
+            if last_date > min_last_date:
+                last_date = min_last_date
+
             lines.append((0, 0, line))
 
         # Search for previous transaction end amount
