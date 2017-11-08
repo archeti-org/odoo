@@ -268,7 +268,7 @@ class AccountBankStatement(models.Model):
                 last_date = transaction['date']
 
             # CUSTOM CODE
-            if last_date > min_last_date:
+            if min_last_date and last_date > min_last_date:
                 last_date = min_last_date
             # CUSTOM CODE END
 
