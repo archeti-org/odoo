@@ -231,7 +231,7 @@ class AccountBankStatement(models.Model):
         total = 0
         lines = []
         last_date = journal.account_online_journal_id.last_sync
-        min_last_date = last_date
+        min_last_date = False
         end_amount = 0
         for transaction in transactions:
             if all_lines.search_count([('online_identifier', '=', transaction['id'])]) > 0:
@@ -245,11 +245,12 @@ class AccountBankStatement(models.Model):
                 continue
             # CUSTOM CODE ends;
 
-            # Get the last date
+            # CUSTOM CODE: Get the last date
             if 'status' in transaction and transaction['status'] == 'PENDING':
-                if transaction['date'] < min_last_date:
+                if not min_last_date or transaction['date'] < min_last_date:
                     min_last_date = transaction['date']
                 continue
+            # CUSTOM CODE END
 
             line = {
                 'date': transaction['date'],
@@ -266,8 +267,10 @@ class AccountBankStatement(models.Model):
             if not last_date or transaction['date'] > last_date:
                 last_date = transaction['date']
 
+            # CUSTOM CODE
             if last_date > min_last_date:
                 last_date = min_last_date
+            # CUSTOM CODE END
 
             lines.append((0, 0, line))
 
