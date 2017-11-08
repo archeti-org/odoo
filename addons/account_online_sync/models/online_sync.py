@@ -267,12 +267,12 @@ class AccountBankStatement(models.Model):
             if not last_date or transaction['date'] > last_date:
                 last_date = transaction['date']
 
-            # CUSTOM CODE
-            if min_last_date and last_date > min_last_date:
-                last_date = min_last_date
-            # CUSTOM CODE END
-
             lines.append((0, 0, line))
+
+        # CUSTOM CODE
+        if min_last_date and min_last_date > last_date:
+            last_date = min_last_date
+        # CUSTOM CODE END
 
         # Search for previous transaction end amount
         balance_start = None
