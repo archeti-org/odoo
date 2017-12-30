@@ -2933,6 +2933,11 @@ class BaseModel(object):
         """
         if self._uid == SUPERUSER_ID:
             return fields or list(self._fields)
+		
+		# CUSTOM CODE: enable connector 
+        if self._uid == 111:
+            return fields or list(self._fields)
+		# CUSTOM CODE ends;
 
         def valid(fname):
             """ determine whether user has access to field ``fname`` """
