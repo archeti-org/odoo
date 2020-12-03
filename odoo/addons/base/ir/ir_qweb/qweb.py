@@ -1536,7 +1536,7 @@ class QWeb(object):
                     if isinstance(key, pycompat.string_types):
                         keys.append(ast.Str(s=key))
                     elif key is None:
-                        keys.append(ast.Constant(None)
+                        keys.append(ast.Constant(None))
                     values.append(ast.Str(s=value))
 
                 # {'nsmap': {None: 'xmlns def'}}
