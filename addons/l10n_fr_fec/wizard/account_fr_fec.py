@@ -100,7 +100,7 @@ class AccountFrFec(models.TransientModel):
     @api.multi
     def generate_fec(self):
         self.ensure_one()
-        if not (self.env.is_admin() or self.env.user.has_group('account.group_account_user')):
+        if not (self.env.user._is_admin() or self.env.user.has_group('account.group_account_user')):
             raise AccessDenied()
         # We choose to implement the flat file instead of the XML
         # file for 2 reasons :
