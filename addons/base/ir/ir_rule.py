@@ -8,6 +8,8 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class IrRule(models.Model):
     _name = 'ir.rule'
@@ -93,6 +95,7 @@ class IrRule(models.Model):
 
         # read 'domain' as self._uid to have the correct eval context for the rules.
         rules = self.browse(rule_ids)
+        _logger.error(['%%%%%%%', rule_ids])
         rule_domain = {vals['id']: vals['domain'] for vals in rules.read(['domain'])}
 
         # browse user and rules as SUPERUSER_ID to avoid access errors!

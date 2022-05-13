@@ -1160,7 +1160,7 @@ class AccountMoveLine(models.Model):
             self.env['account.move'].browse(list(move_ids))._check_lock_date()
         return True
 
-    ####################################################
+    #################################################
     # Misc / utility methods
     ####################################################
 

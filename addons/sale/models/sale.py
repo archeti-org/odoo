@@ -11,6 +11,9 @@ from odoo.tools.misc import formatLang
 
 import odoo.addons.decimal_precision as dp
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _name = "sale.order"
@@ -271,6 +274,7 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
+        _logger.error(['@@@@', self.env.user.company_id])
         journal_id = self.env['account.invoice'].default_get(['journal_id'])['journal_id']
         if not journal_id:
             raise UserError(_('Please define an accounting sale journal for this company.'))

@@ -142,6 +142,7 @@ def check(f):
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     _logger.debug("IntegrityError", exc_info=True)
+                    _logger.exception('ERROR')
                     try:
                         errortxt = inst.pgerror.replace('«','"').replace('»','"')
                         if '"public".' in errortxt:

@@ -13,6 +13,9 @@ from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 import odoo.addons.decimal_precision as dp
 
 
+import logging
+_logger = logging.getLogger(__name__)
+
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -70,7 +73,9 @@ class PurchaseOrder(models.Model):
     def _default_picking_type(self):
         type_obj = self.env['stock.picking.type']
         company_id = self.env.context.get('company_id') or self.env.user.company_id.id
+
         types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
+        _logger.error(['=======', company_id, types])
         if not types:
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return types[:1]

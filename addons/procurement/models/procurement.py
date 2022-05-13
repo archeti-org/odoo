@@ -133,6 +133,8 @@ class ProcurementOrder(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('company_id'):
+            vals['company_id'] = 39
         procurement = super(ProcurementOrder, self).create(vals)
         if not self._context.get('procurement_autorun_defer'):
             procurement.run()

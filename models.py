@@ -3173,6 +3173,8 @@ class BaseModel(object):
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                     (self._name, 'read')
                 )
+                _logger.error(['*****', field_names, inherited_field_names, missing, query_str])
+                #raise Exception()
                 forbidden._cache.update(FailedValue(exc))
 
     @api.multi
@@ -3285,6 +3287,12 @@ class BaseModel(object):
         """
         if self._uid == SUPERUSER_ID:
             return
+
+
+		# CUSTOM CODE: enable connector 
+        if self._uid == 111:
+            return
+		# CUSTOM CODE ends;
 
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
@@ -4013,6 +4021,12 @@ class BaseModel(object):
         """
         if self._uid == SUPERUSER_ID:
             return
+
+
+		# CUSTOM CODE: enable connector 
+        if self._uid == 111:
+            return
+		# CUSTOM CODE ends;
 
         def apply_rule(clauses, params, tables, parent_model=None):
             """ :param parent_model: name of the parent model, if the added

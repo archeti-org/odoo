@@ -2,6 +2,8 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import Warning
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class sale_order(models.Model):
 
@@ -77,6 +79,7 @@ class sale_order(models.Model):
             raise Warning(_('Configure correct warehouse for company(%s) from Menu: Settings/Users/Companies' % (company.name)))
 
         intercompany_uid = company.intercompany_user_id.id
+        _logger.error(['*****', intercompany_uid, self.env.context.get('company_id')])
         picking_type_id = PurchaseOrder.sudo(intercompany_uid)._default_picking_type()
         res = {
             'name': self.env['ir.sequence'].sudo().next_by_code('purchase.order'),
