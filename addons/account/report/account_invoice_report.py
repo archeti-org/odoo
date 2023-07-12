@@ -173,7 +173,13 @@ class AccountInvoiceReport(models.Model):
         '''
 
     def init(self):
-        tools.drop_view_if_exists(self.env.cr, self._table)
+        table_kind = tools.table_kind(self.env.cr, self._table)
+        if not table_kind or table_kind == 'v':
+            self._cr.execute("DROP VIEW IF EXISTS {}"
+                             .format(self._table))
+        else:
+            self._cr.execute("DROP MATERIALIZED VIEW IF EXISTS {}"
+                             .format(self._table))
         self.env.cr.execute('''
             CREATE OR REPLACE VIEW %s AS (
                 %s %s %s %s
