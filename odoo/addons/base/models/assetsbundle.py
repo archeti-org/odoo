@@ -268,7 +268,7 @@ class AssetsBundle(object):
 
         return True
 
-    def get_attachments(self, extension, ignore_version=False):
+    def get_attachments(self, extension, ignore_version=True):
         """ Return the ir.attachment records for a given bundle. This method takes care of mitigating
         an issue happening when parallel transactions generate the same bundle: while the file is not
         duplicated on the filestore (as it is stored according to its hash), there are multiple
